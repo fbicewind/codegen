@@ -455,6 +455,6 @@ public class CodeGenEngine {
 	}
 
 	public static void main(String[] args) throws SQLException {
-		genAllCode(new String[] { "demo_a_test" }, null, true, true);
+		CodeGenEngine.genAllCode(new String[] { "demo_a_test" }, null, true, true);
 	}
 }
