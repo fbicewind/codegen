@@ -56,11 +56,11 @@ public class CodeGenEngine {
 	 */
 	public static void genAllCode(String[] tableNames, String[] entityNames, boolean entityCode, boolean daoCode) {
 		if (entityCode && (tableNames == null || tableNames.length == 0)) {
-			System.out.println("Generate code failed. Caused by tableNames is null when generated the entity.");
+			System.err.println("Generate code failed. Caused by tableNames is null when generated the entity.");
 			return;
 		}
 		if (!entityCode && (entityNames == null || entityNames.length == 0)) {
-			System.out.println("Generate code failed. Caused by entityNames is null when generated the dao.");
+			System.err.println("Generate code failed. Caused by entityNames is null when generated the dao.");
 			return;
 		}
 		initPathInfo(entityCode, daoCode);
@@ -69,7 +69,7 @@ public class CodeGenEngine {
 			return;
 		}
 		if (daoCode && (entityNames == null || entityNames.length == 0)) {
-			System.out.println("Generate code failed. Caused by entityNames is null when generated the dao.");
+			System.err.println("Generate code failed. Caused by entityNames is null when generated the dao.");
 			return;
 		}
 		for (String className : entityNames) {
@@ -116,7 +116,7 @@ public class CodeGenEngine {
 	 */
 	private static void genDaoCode(Class<?> clazz, String longEntityName, String primaryKeyType) {
 		if (clazz == null && (longEntityName == null || primaryKeyType == null)) {
-			System.out.println("Generate dao code failed. Caused by param is null.");
+			System.err.println("Generate dao code failed. Caused by param is null.");
 			return;
 		}
 		String entityName = clazz == null ? longEntityName : clazz.getName();
@@ -224,20 +224,20 @@ public class CodeGenEngine {
 			try {
 				entityPath = rootPath + resource.getString("code.entity.path");
 			} catch (Exception e) {
-				System.out.println("Warning, Entity path is null, using default path!");
+				System.err.println("Warning, Entity path is null, using default path!");
 			}
 		}
 		if (daoCode) {
 			try {
 				daoPath = rootPath + resource.getString("code.dao.path");
 			} catch (Exception e) {
-				System.out.println("Warning, Dao path is null, using default path!");
+				System.err.println("Warning, Dao path is null, using default path!");
 			}
 		}
 		try {
 			replaceStr = rootPath + resource.getString("code.replace.str");
 		} catch (Exception e) {
-			System.out.println("Warning, ReplaceStr path is null, using default path!");
+			System.err.println("Warning, ReplaceStr path is null, using default path!");
 		}
 		String lombokStr = resource.getString("code.islombok");
 		isLombok = "true".equals(lombokStr);
@@ -371,6 +371,7 @@ public class CodeGenEngine {
 				mainList.add(ConstantsUtil.ANNOTATION_GENERATEDVALUE);
 			}
 			if ("Date".equalsIgnoreCase(modal.getJavaColumnType())) {
+				importSet.add(ConstantsUtil.IMPORT_DATE);
 				importSet.add(ConstantsUtil.IMPORT_TEMPORAL);
 				importSet.add(ConstantsUtil.IMPORT_TEMPORAL_TYPE);
 				if ("DATE".equalsIgnoreCase(modal.getDbColumnType())) {
@@ -387,7 +388,7 @@ public class CodeGenEngine {
 			mainList.add(ConstantsUtil.ANNOTATION_COLUMN.replace("?", modal.getColumnName()));
 			String columnTypeLong = ColumnTypeEnum.getTypeWithAll(modal.getDbColumnType());
 			if (columnTypeLong == null) {
-				System.out.println("Error, Column " + modal.getColumnName() + " can't be changed!");
+				System.err.println("Error, Column " + modal.getColumnName() + " can't be changed!");
 				continue;
 			}
 			mainList.add(columnTypeLong.replace("?", fmtToCamelName(modal.getColumnName())));
